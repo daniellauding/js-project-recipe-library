@@ -1,59 +1,55 @@
 # Project: Recipe Library
 
-A week-5 exercise from Technigo’s **Advanced JavaScript & TypeScript** course.  
-Goal: practice **functions, conditionals, and basic DOM manipulation** by building a tiny UI with **one filter** and **one sorting option** that updates a placeholder recipe card.
+A Week 6 project from Technigo’s **Advanced JavaScript & TypeScript** course.  
+Goal: work with **arrays, objects, loops**, and dynamic **DOM rendering** by creating a recipe app where users can **filter**, **sort**, and **randomize** recipes from real data.
 
 ---
 
 ## What’s this about?
 
-This week is all about foundations:
-- Read user input (which button is active)
-- Use **functions** and **conditionals** to decide what to show
-- Update the UI dynamically via the **DOM**
-- Keep JavaScript **minimal** (no arrays, no API yet)
-
-Next weeks (6–7) we’ll replace hardcoded conditionals with real data and `.map()/.filter()`, then add API calls.
+This week is all about **moving from hardcoded UI to data-driven components**:
+- Display recipes from a real `recipes` array
+- Use `.map()` to render HTML dynamically
+- Use `.filter()` to narrow results by user input
+- Use `.sort()` to reorder results by time or ingredients
+- Update the DOM based on what the user selects
+- Keep everything modular and clean using **functions**
 
 ---
 
 ## Tech / What I built with
 
-- **HTML/CSS** for layout and styling
-- **Vanilla JavaScript** (no frameworks)
-  - `addEventListener` for clicks
-  - `classList` to toggle active state
-  - `querySelector` to read/write DOM
-  - Simple **functions** and **if/else**
+- **HTML/CSS** for structure and layout
+- **Vanilla JavaScript**
+  - `map()`, `filter()`, `sort()` for array logic
+  - `addEventListener()` for interactivity
+  - `innerHTML` and `classList` for DOM updates
+  - Modular **render + logic functions**
+  - `Math.random()` for picking a random recipe
 
 ---
 
 ## Project requirements (from the brief)
 
-- Build the HTML structure:
-  - Input fields for filters and sorting options
-  - A **placeholder** recipe card
-- Style to match the Figma design as closely as possible
-- Write JavaScript functions to handle user selections
-- Use conditional statements to display a message/result based on input
-- Users can select **at least one filter**
-- Users can select **at least one sorting option**
-- Be responsive from **320px** up to **1600px+**
+- Display all recipes from a `recipes` array when the page loads :white_check_mark:
+- Enable filtering by at least one property (e.g. cuisine, diet, time)
+- Enable sorting by at least one property (e.g. time or ingredients count)
+- Include a "random recipe" button :white_check_mark:
+- Show an empty state when no recipes match the filter
+- Responsive design (320px → 1600px+ screens)
 
 ---
 
 ## How it works (this week’s scope)
 
-- The UI has:
-  - One **filter group** (e.g., cuisine: All / Italy / USA / China)
-  - One **sort group** (time: Ascending / Descending)
-- When a button is clicked:
-  1. The button becomes “active” (CSS class)
-  2. A function (`updateCard`) reads the active buttons
-  3. A simple `if/else` updates the placeholder card (title, cuisine, time)
-  4. A small arrow (⬆️/⬇️) reflects the chosen sort
-
-> There’s no list rendering or real sorting yet — that comes next week.
+- A `recipes` array contains full recipe data (title, image, ingredients, etc.)
+- All recipes are rendered using `.map().join("")` into the DOM
+- When a user selects a **filter** or **sort option**:
+  1. A function updates the active class
+  2. Filtering and sorting functions return a new array
+  3. `renderRecipes()` displays the updated list
+- A random button uses `Math.random()` to pick one recipe
+- If no recipes match, a friendly "no results" message is shown
 
 ---
 
@@ -67,33 +63,37 @@ Next weeks (6–7) we’ll replace hardcoded conditionals with real data and `.m
 
 ## What I learned
 
-- Structuring logic into **small functions**
-- **Conditionals** to branch UI behavior
-- DOM updates with `innerText/innerHTML`
-- Managing active state with `classList`
+- How to loop and transform arrays with `.map()`
+- How to build **reusable rendering functions**
+- How to structure filtering and sorting logic in clean ways
+- How to update the DOM based on data changes
+- Importance of `.join("")` to avoid comma issues in HTML
+- How to pick a random item from an array
 
 ---
 
 ## Accessibility notes
 
-- Buttons are real `<button>` elements (keyboard focus, roles)
-- Clear visible focus state in CSS
-- Semantic headings for groups
+- Real `<button>` elements used for better accessibility
+- Focus state is styled for keyboard navigation
+- Semantic structure (headings, lists, image alt text)
 
 ---
 
-## Next steps (weeks 6–7)
+## Next steps (week 7+)
 
-- Replace `if/else` with a **recipes array**, render with `.map()`
-- Filter with `.filter()` and **actually sort** by time
-- Optional: fetch data from an API and handle loading/error states
+- Add real recipe data using a public API
+- Handle **loading** and **error** states when fetching
+- Add more filters and refine sort logic
+- Explore user input fields and search
 
 ---
 
 ## Changelog
 
-- **Sep 2025**: Week 5 version — minimal JS, single card, filter + sort placeholders
+- **Sep 2025 – Week 5**: Basic UI with placeholder data and conditionals
+- **Oct 2025 – Week 6**: Switched to real data with arrays, objects, `.map()`, `.filter()`, and dynamic rendering
 
 ---
 
-Built in Lund with lots of coffee ☕
+Built in Lund with lots of coffee ☕ and way too many console.logs 📟

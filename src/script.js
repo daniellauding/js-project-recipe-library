@@ -5,62 +5,62 @@
  */
 
 // Hämta delar av kortet vi vill ändra
-const titleEl = document.querySelector(".recipe-card__title");
-const cuisineEl = document.querySelector(".recipe-card__cuisine");
-const timeEl = document.querySelector(".recipe-card__time");
+// const titleEl = document.querySelector(".recipe-card__title");
+// const cuisineEl = document.querySelector(".recipe-card__cuisine");
+// const timeEl = document.querySelector(".recipe-card__time");
 
 // Funktion: uppdatera kortet baserat på filter och sort
-const updateCard = () => {
+// const updateCard = () => {
   // Hitta aktiva knappar
-  const activeCuisine = document.querySelector(".filter-group:first-child .filter-button--active").innerText;
-  const activeSort = document.querySelector(".filter-group:last-child .filter-button--active").innerText;
+  // const activeCuisine = document.querySelector(".filter-group:first-child .filter-button--active").innerText;
+  // const activeSort = document.querySelector(".filter-group:last-child .filter-button--active").innerText;
 
   // Standardvärden (om "All" är valt)
-  let title = "🍽️ Recipe card title";
-  let cuisine = "Type";
-  let time = "XX minutes";
+  // let title = "🍽️ Recipe card title";
+  // let cuisine = "Type";
+  // let time = "XX minutes";
 
   // Filtrering med if/else
-  if (activeCuisine === "Italy") {
-    title = "🍝 Spaghetti Carbonara";
-    cuisine = "Italian";
-    time = "25 minutes";
-  } else if (activeCuisine === "USA") {
-    title = "🍔 Cheeseburger";
-    cuisine = "USA";
-    time = "20 minutes";
-  } else if (activeCuisine === "China") {
-    title = "🥡 Fried Rice";
-    cuisine = "China";
-    time = "30 minutes";
-  }
+  // if (activeCuisine === "Italy") {
+  //   title = "🍝 Spaghetti Carbonara";
+  //   cuisine = "Italian";
+  //   time = "25 minutes";
+  // } else if (activeCuisine === "USA") {
+  //   title = "🍔 Cheeseburger";
+  //   cuisine = "USA";
+  //   time = "20 minutes";
+  // } else if (activeCuisine === "China") {
+  //   title = "🥡 Fried Rice";
+  //   cuisine = "China";
+  //   time = "30 minutes";
+  // }
 
   // Uppdatera kortet med nya värden
-  titleEl.innerText = title;
-  cuisineEl.innerHTML = `<span>Cuisine:</span> ${cuisine}`;
+  // titleEl.innerText = title;
+  // cuisineEl.innerHTML = `<span>Cuisine:</span> ${cuisine}`;
 
   // Lägg på sorteringspil ⬆️ eller ⬇️
-  timeEl.innerHTML = `<span>Time:</span> ${time} ${activeSort === "Ascending" ? "⬆️" : "⬇️"}`;
-};
+  // timeEl.innerHTML = `<span>Time:</span> ${time} ${activeSort === "Ascending" ? "⬆️" : "⬇️"}`;
+// };
 
 // Event: klick på filterknappar
-document.querySelectorAll(".filter-button").forEach(button => {
-  button.addEventListener("click", () => {
-    const group = button.closest(".filter-group__buttons");
+// document.querySelectorAll(".filter-button").forEach(button => {
+  // button.addEventListener("click", () => {
+    // const group = button.closest(".filter-group__buttons");
 
     // Ta bort active från alla knappar i samma grupp
-    group.querySelectorAll(".filter-button").forEach(btn => btn.classList.remove("filter-button--active"));
+    // group.querySelectorAll(".filter-button").forEach(btn => btn.classList.remove("filter-button--active"));
 
     // Lägg till active på klickad knapp
-    button.classList.add("filter-button--active");
+    // button.classList.add("filter-button--active");
 
     // Uppdatera receptkortet
-    updateCard();
-  });
-});
+//     updateCard();
+//   });
+// });
 
 // Kör en gång när sidan laddas
-updateCard();
+// updateCard();
 
 
 /* Version 2
@@ -133,46 +133,6 @@ updateCard();
 // // filters.forEach(filter => {
 // //   console.log(`${filter.key}:`, filter.values);
 // // });
-
-// // #### Lista med recept – varje recept är ett objekt med detaljer som vi kan filtrera på
-// const recipes = [
-//   {
-//     title: "Avocado Toast",
-//     image: "https://dummyimage.com/600x400/000/fff",
-//     diets: ["Vegan", "Dairy-free"],
-//     cuisine: "Mediterranean",
-//     cookingTime: "Under 15 min",
-//     qtyIngredients: "Under 5 ingredients",
-//     ingredients: ["Bread", "Avocado", "Lemon", "Salt"]
-//   },
-//   {
-//     title: "Spaghetti Carbonara",
-//     image: "https://dummyimage.com/600x400/000/fff",
-//     diets: ["Gluten-free"], // maybe with gluten-free pasta!
-//     cuisine: "Italian",
-//     cookingTime: "15-30 min",
-//     qtyIngredients: "6-10 ingredients",
-//     ingredients: ["Pasta", "Eggs", "Bacon", "Parmesan", "Pepper"]
-//   },
-//   {
-//     title: "Falafel Wrap",
-//     image: "https://dummyimage.com/600x400/000/fff",
-//     diets: ["Vegetarian"],
-//     cuisine: "Middle Eastern",
-//     cookingTime: "30-60 min",
-//     qtyIngredients: "6-10 ingredients",
-//     ingredients: ["Falafel", "Pita", "Hummus", "Lettuce", "Tomatoes"]
-//   },
-//   {
-//     title: "Vegan Curry",
-//     image: "https://dummyimage.com/600x400/000/fff",
-//     diets: ["Vegan", "Gluten-free", "Dairy-free"],
-//     cuisine: "Asian",
-//     cookingTime: "30-60 min",
-//     qtyIngredients: "11-15 ingredients",
-//     ingredients: ["Chickpeas", "Coconut Milk", "Spinach", "Curry Paste", "Onion", "Garlic"]
-//   }
-// ];
 
 // // #### Funktion för att skapa HTML för varje recept och visa dem på sidan
 // const renderRecipes = (recipesToRender) => {
@@ -278,4 +238,114 @@ updateCard();
 // // #### Visar alla recept direkt när sidan laddas
 // renderRecipes(recipes);
 
+// // #### Lista med recept – varje recept är ett objekt med detaljer som vi kan filtrera på
+const recipes = [
+  {
+    id: 1,
+    title: "Avocado Toast",
+    image: "https://dummyimage.com/600x400/000/fff",
+    servings: 4,
+    diets: ["Vegan", "Dairy-free"],
+    cuisine: "Mediterranean",
+    readyInMinutes: 15,
+    qtyIngredients: "Under 5 ingredients",
+    ingredients: [
+      "Bread",
+      "Avocado",
+      "Lemon",
+      "Salt"
+    ],
+    pricePerServing: 3.0,
+    popularity: 92
+  },
+  {
+    id: 2,
+    title: "Spaghetti Carbonara",
+    image: "https://dummyimage.com/600x400/000/fff",
+    servings: 2,
+    diets: ["Gluten-free"], // maybe with gluten-free pasta!
+    cuisine: "Italian",
+    readyInMinutes: 20,
+    qtyIngredients: "6-10 ingredients",
+    ingredients: [
+      "Pasta",
+      "Eggs",
+      "Bacon",
+      "Parmesan",
+      "Pepper"
+    ],
+    pricePerServing: 2.5,
+    popularity: 85
+  },
+  {
+    id: 3,
+    title: "Falafel Wrap",
+    image: "https://dummyimage.com/600x400/000/fff",
+    servings: 3,
+    diets: ["Vegetarian"],
+    cuisine: "Middle Eastern",
+    readyInMinutes: 60,
+    qtyIngredients: "6-10 ingredients",
+    ingredients: [
+      "Falafel",
+      "Pita",
+      "Hummus",
+      "Lettuce",
+      "Tomatoes"
+    ],
+    pricePerServing: 4.0,
+    popularity: 78
+  },
+  {
+    id: 4,
+    title: "Vegan Curry",
+    image: "https://dummyimage.com/600x400/000/fff",
+    servings: 4,
+    diets: ["Vegan", "Gluten-free", "Dairy-free"],
+    cuisine: "Asian",
+    readyInMinutes: 90,
+    qtyIngredients: "11-15 ingredients",
+    ingredients: [
+      "Chickpeas",
+      "Coconut Milk",
+      "Spinach",
+      "Curry Paste",
+      "Onion",
+      "Garlic"
+    ],
+    pricePerServing: 2.8,
+    popularity: 88
+  }
+];
 
+const showRecipes = (recipesToShow) => {
+  const showRecipesWrapper = document.getElementById('recipes');
+
+  const recipeCard = recipesToShow.map(recipe => `
+    <article class="recipe-card">
+      <img src="${recipe.image}" alt="${recipe.title}" />
+      <h3>${recipe.title}</h3>
+      <p><strong>Cuisine:</strong> ${recipe.cuisine}</p>
+      <p><strong>Time:</strong> ${recipe.readyInMinutes} min</p>
+      <ul>
+        ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join("")}
+      </ul>
+    </article>
+  `).join("");
+    
+  showRecipesWrapper.innerHTML = recipeCard;
+
+};
+
+showRecipes(recipes);
+
+const showRandomRecipe = () => {
+
+  const randomIndex = Math.floor(Math.random() * recipes.length);
+  const randomRecipe = [recipes[randomIndex]];
+
+  showRecipes(randomRecipe)
+}
+
+  const buttonRandomElement = document.getElementById('btn-random');
+  buttonRandomElement.addEventListener('click', showRandomRecipe);
