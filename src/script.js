@@ -11,50 +11,50 @@
 
 // Funktion: uppdatera kortet baserat på filter och sort
 // const updateCard = () => {
-  // Hitta aktiva knappar
-  // const activeCuisine = document.querySelector(".filter-group:first-child .filter-button--active").innerText;
-  // const activeSort = document.querySelector(".filter-group:last-child .filter-button--active").innerText;
+// Hitta aktiva knappar
+// const activeCuisine = document.querySelector(".filter-group:first-child .filter-button--active").innerText;
+// const activeSort = document.querySelector(".filter-group:last-child .filter-button--active").innerText;
 
-  // Standardvärden (om "All" är valt)
-  // let title = "🍽️ Recipe card title";
-  // let cuisine = "Type";
-  // let time = "XX minutes";
+// Standardvärden (om "All" är valt)
+// let title = "🍽️ Recipe card title";
+// let cuisine = "Type";
+// let time = "XX minutes";
 
-  // Filtrering med if/else
-  // if (activeCuisine === "Italy") {
-  //   title = "🍝 Spaghetti Carbonara";
-  //   cuisine = "Italian";
-  //   time = "25 minutes";
-  // } else if (activeCuisine === "USA") {
-  //   title = "🍔 Cheeseburger";
-  //   cuisine = "USA";
-  //   time = "20 minutes";
-  // } else if (activeCuisine === "China") {
-  //   title = "🥡 Fried Rice";
-  //   cuisine = "China";
-  //   time = "30 minutes";
-  // }
+// Filtrering med if/else
+// if (activeCuisine === "Italy") {
+//   title = "🍝 Spaghetti Carbonara";
+//   cuisine = "Italian";
+//   time = "25 minutes";
+// } else if (activeCuisine === "USA") {
+//   title = "🍔 Cheeseburger";
+//   cuisine = "USA";
+//   time = "20 minutes";
+// } else if (activeCuisine === "China") {
+//   title = "🥡 Fried Rice";
+//   cuisine = "China";
+//   time = "30 minutes";
+// }
 
-  // Uppdatera kortet med nya värden
-  // titleEl.innerText = title;
-  // cuisineEl.innerHTML = `<span>Cuisine:</span> ${cuisine}`;
+// Uppdatera kortet med nya värden
+// titleEl.innerText = title;
+// cuisineEl.innerHTML = `<span>Cuisine:</span> ${cuisine}`;
 
-  // Lägg på sorteringspil ⬆️ eller ⬇️
-  // timeEl.innerHTML = `<span>Time:</span> ${time} ${activeSort === "Ascending" ? "⬆️" : "⬇️"}`;
+// Lägg på sorteringspil ⬆️ eller ⬇️
+// timeEl.innerHTML = `<span>Time:</span> ${time} ${activeSort === "Ascending" ? "⬆️" : "⬇️"}`;
 // };
 
 // Event: klick på filterknappar
 // document.querySelectorAll(".filter-button").forEach(button => {
-  // button.addEventListener("click", () => {
-    // const group = button.closest(".filter-group__buttons");
+// button.addEventListener("click", () => {
+// const group = button.closest(".filter-group__buttons");
 
-    // Ta bort active från alla knappar i samma grupp
-    // group.querySelectorAll(".filter-button").forEach(btn => btn.classList.remove("filter-button--active"));
+// Ta bort active från alla knappar i samma grupp
+// group.querySelectorAll(".filter-button").forEach(btn => btn.classList.remove("filter-button--active"));
 
-    // Lägg till active på klickad knapp
-    // button.classList.add("filter-button--active");
+// Lägg till active på klickad knapp
+// button.classList.add("filter-button--active");
 
-    // Uppdatera receptkortet
+// Uppdatera receptkortet
 //     updateCard();
 //   });
 // });
@@ -235,9 +235,6 @@
 //   });
 // });
 
-// // #### Visar alla recept direkt när sidan laddas
-// renderRecipes(recipes);
-
 // // #### Lista med recept – varje recept är ett objekt med detaljer som vi kan filtrera på
 const recipes = [
   {
@@ -318,34 +315,120 @@ const recipes = [
   }
 ];
 
+// #### Hämta element från DOMet
+const buttonRandomElement = document.getElementById('btn-random');
+const filtersRoot = document.querySelector(".recipe-library__filters");
+
+// #### 
 const showRecipes = (recipesToShow) => {
+  // #### Hämtar sektionen i HTML där recepten ska visas
   const showRecipesWrapper = document.getElementById('recipes');
 
+  // #### Funktion för att skapa HTML för varje recept och visa dem på sidan
   const recipeCard = recipesToShow.map(recipe => `
     <article class="recipe-card">
-      <img src="${recipe.image}" alt="${recipe.title}" />
-      <h3>${recipe.title}</h3>
-      <p><strong>Cuisine:</strong> ${recipe.cuisine}</p>
-      <p><strong>Time:</strong> ${recipe.readyInMinutes} min</p>
-      <ul>
-        ${recipe.ingredients.map(ing => `<li>${ing}</li>`).join("")}
-      </ul>
+      <img class="recipe-card__image" src="${recipe.image}" alt="${recipe.title}" />
+        <div class="recipe-card__content">
+          <h3 class="recipe-card__title">${recipe.title}</h3>
+          <p class="recipe-card__cuisine"><span>Cuisine:</span> ${recipe.cuisine}</p>
+          <p class="recipe-card__time"><span>Time:</span> ${recipe.readyInMinutes} min</p>
+          <div class="recipe-card__ingredients">
+            <h4 class="recipe-card__ingredients-title">Ingredients</h4>
+            <ul class="recipe-card__ingredients-list">
+              ${recipe.ingredients.map(ing => `<li class="recipe-card__ingredients-item">${ing}</li>`).join("")}
+            </ul>
+          </div>
+        </div>
     </article>
   `).join("");
-    
+
+  // #### Lägger in alla receptkort i sektionen
   showRecipesWrapper.innerHTML = recipeCard;
 
 };
 
+// #### Visar alla recept direkt när sidan laddas
 showRecipes(recipes);
 
+// #### Funktion för att visa vilket recept som helst
 const showRandomRecipe = () => {
+  const diceNumbers = ["dice-1", "dice-2", "dice-3", "dice-4", "dice-5", "dice-6"];
+  const randomRecipe = [recipes[Math.floor(Math.random() * recipes.length)]];
+  const randomDiceIcon = diceNumbers[Math.floor(Math.random() * diceNumbers.length)];
+  const iconEl = buttonRandomElement.querySelector("[data-lucide], svg");
 
-  const randomIndex = Math.floor(Math.random() * recipes.length);
-  const randomRecipe = [recipes[randomIndex]];
-
-  showRecipes(randomRecipe)
+  iconEl.setAttribute("data-lucide", randomDiceIcon);
+  lucide.createIcons();
+  showRecipes(randomRecipe);
 }
 
-  const buttonRandomElement = document.getElementById('btn-random');
-  buttonRandomElement.addEventListener('click', showRandomRecipe);
+// #### Knappar för filtrering
+buttonRandomElement.addEventListener('click', showRandomRecipe);
+
+// #### Initiera Lucide icons
+lucide.createIcons();
+
+// #### 1. Här definierar vi vilka filtergrupper vi vill ha
+// key = nyckel för att kunna läsa/filtrera
+// label = rubrik som ska synas i UI
+// values = alternativen som ska bli knappar
+// style = CSS-klass för knapparna (primary/secondary)
+const filterConfig = [
+  {
+    key: "cuisine",
+    label: "Filter på kök",
+    style: "filter-button--primary",
+    values: ["All", "Mediterranean", "Middle Eastern", "Asian", "Italian"]
+  },
+  {
+    key: "sort",
+    label: "Sortera på tid",
+    style: "filter-button--secondary",
+    values: ["Descending", "Ascending"]
+  }
+];
+
+// #### 2. State = det användaren valt just nu
+const state = {
+  cuisine: "All",
+  sort: "Descending"
+};
+
+// #### 3. Funktion som bygger upp filtergrupperna från config
+function renderFilters() {
+  const groupsHtml = filterConfig.map(group => {
+    const buttons = group.values.map(val => {
+      const isActive = state[group.key] === val;
+      return `
+        <button
+          class="filter-button ${group.style} ${isActive ? "filter-button--active" : ""}"
+          data-group="${group.key}"
+          data-value="${val}">
+          ${val}
+        </button>
+      `;
+    }).join("");
+
+    return `
+      <div class="filter-group">
+        <h2 class="filter-group__title">${group.label}</h2>
+        <div class="filter-group__buttons">${buttons}</div>
+      </div>
+    `;
+  }).join("");
+
+  // Behåll din random-knapp längst till höger
+  const randomBtn = `
+    <button id="btn-random" class="filter-button filter-button--secondary">
+      <i data-lucide="dice-5"></i>
+    </button>
+  `;
+
+  filtersRoot.innerHTML = groupsHtml + randomBtn;
+
+  // Rendera om Lucide-ikonen
+  lucide.createIcons();
+
+  // Sätt tillbaka click-lyssnaren på random-knappen (den renderas om varje gång)
+  document.getElementById("btn-random").addEventListener("click", showRandomRecipe);
+}

@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="src/style.css" />
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 </head>
 
 <body>
@@ -30,10 +31,10 @@
           <button class="filter-button filter-button--secondary">Ascending</button>
         </div>
       </div>
+      <button id="btn-random" class="filter-button filter-button--secondary">
+        <i data-lucide="dice-5"></i>
+      </button>
     </section>
-    <button id="btn-random" class="filter-button filter-button--secondary">
-      Random recipe
-    </button>
     <section id="recipes" class="recipe-library__items">
       <!-- <article class="recipe-card recipe-card--featured">
         <img class="recipe-card__image" src="https://dummyimage.com/600x400/000/fff" alt="Recipe title" />
