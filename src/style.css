@@ -149,8 +149,27 @@ body {
 /* Filters section */
 .recipe-library__filters {
   display: flex;
-  gap: var(--spacing-2xl);
+  flex-wrap: wrap; /* Gör så att knapparna bryts till ny rad på små skärmar */
+  gap: var(--spacing-md);
   margin-bottom: var(--spacing-2xl);
+  align-items: center;
+  flex-direction: column;
+}
+
+@media (min-width: 600px) {
+  .recipe-library__filters {
+    flex-direction: row;
+  }
+}
+
+.filter-group {
+  width: 100%;
+}
+
+@media (min-width: 600px) {
+  .filter-group {
+    width: auto;
+  }
 }
 
 .filter-group__title {
@@ -164,6 +183,13 @@ body {
 .filter-group__buttons {
   display: flex;
   gap: var(--spacing-sm);
+  flex-direction: column;
+}
+
+@media (min-width: 600px) {
+  .filter-group__buttons {
+    flex-direction: row;
+  }
 }
 
 /* Filter buttons */
@@ -214,9 +240,9 @@ body {
 .recipe-library__items {
   display: grid;
   gap: var(--spacing-lg);
-
-  /* Mobil (default): 1 kolumn */
   grid-template-columns: 1fr;
+  width: 100%;        /* gör att griden alltid fyller sin container */
+  margin-top: var(--spacing-xl); /* lite luft från filter-knapparna */
 }
 
 /* iPad: 2 kolumner */
@@ -233,10 +259,21 @@ body {
   }
 }
 
-/* Featured = tar upp 2 kolumner och 2 rader */
+/* Featured = vanlig i mobil */
 .recipe-card--featured {
-  grid-column: span 2;
-  grid-row: span 2;
+  border: 2px solid var(--color-primary);
+}
+
+/* Bara från tablet och uppåt tar featured mer plats */
+@media (min-width: 600px) {
+  .recipe-card--featured {
+    grid-column: span 2;
+    grid-row: span 2;
+  }
+
+  .recipe-card--featured .recipe-card__image {
+    height: 300px; /* gör bilden större */
+  }
 }
 
 .recipe-card--featured .recipe-card__image {
@@ -315,4 +352,18 @@ body {
   margin: 0;
   padding-left: var(--spacing-0);
   list-style-type: none;
+}
+
+.empty-state {
+  text-align: center;
+  padding: var(--spacing-3xl) var(--spacing-lg);
+  background: #fff;
+  border-radius: var(--border-radius-lg);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  color: var(--color-text-secondary);
+}
+
+.empty-state p {
+  font-size: var(--font-size-lg);
+  margin-bottom: var(--spacing-lg);
 }

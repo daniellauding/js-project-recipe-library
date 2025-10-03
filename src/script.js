@@ -88,6 +88,29 @@ const showRecipes = (recipesToShow) => {
   // #### Hämtar sektionen i HTML där recepten ska visas
   const showRecipesWrapper = document.getElementById('recipes');
 
+  if (recipesToShow.length === 0) {
+    // Visa tomt läge
+    showRecipesWrapper.innerHTML = `
+      <div class="empty-state">
+        <p>😕 Inga recept matchar ditt val.</p>
+        <button class="filter-button filter-button--secondary" id="reset-filters">
+          Visa alla recept
+        </button>
+      </div>
+    `;
+
+    // Event för reset-knappen
+    document.getElementById("reset-filters").addEventListener("click", () => {
+      activeCuisine = "All";
+      activeSort = "Descending";
+      filterAndSortRecipes();
+      // Uppdatera knapparnas aktiva status
+      renderFilters();
+    });
+
+    return;
+  }
+
   // #### Funktion för att skapa HTML för varje recept och visa dem på sidan
   const recipeCard = recipesToShow.map(recipe => {
     // Kolla om receptet ska vara "featured"
