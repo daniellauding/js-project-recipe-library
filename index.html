@@ -13,24 +13,8 @@
     <h1 class="recipe-library__title">Recipe Library</h1>
 
     <section class="recipe-library__filters">
-      <div class="filter-group">
-        <h2 class="filter-group__title">Filter on kitchen</h2>
-        <div class="filter-group__buttons">
-          <button class="filter-button filter-button--primary filter-button--active">All</button>
-          <button class="filter-button filter-button--primary">Italy</button>
-          <button class="filter-button filter-button--primary">USA</button>
-          <button class="filter-button filter-button--primary">China</button>
-        </div>
-      </div>
-      <div class="filter-group">
-        <h2 class="filter-group__title">Sort on time</h2>
-        <div class="filter-group__buttons">
-          <button class="filter-button filter-button--secondary filter-button--active">
-            Descending
-          </button>
-          <button class="filter-button filter-button--secondary">Ascending</button>
-        </div>
-      </div>
+      <div class="filter-group" id="filter-cuisine"></div>
+      <div class="filter-group" id="filter-sort"></div>
       <button id="btn-random" class="filter-button filter-button--secondary">
         <i data-lucide="dice-5"></i>
       </button>

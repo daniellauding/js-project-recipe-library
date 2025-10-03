@@ -1,240 +1,3 @@
-/* Version 1
-  ┌─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │ "Här är enkel" variant av projektet vecka 1                                                                     │
-  └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
- */
-
-// Hämta delar av kortet vi vill ändra
-// const titleEl = document.querySelector(".recipe-card__title");
-// const cuisineEl = document.querySelector(".recipe-card__cuisine");
-// const timeEl = document.querySelector(".recipe-card__time");
-
-// Funktion: uppdatera kortet baserat på filter och sort
-// const updateCard = () => {
-// Hitta aktiva knappar
-// const activeCuisine = document.querySelector(".filter-group:first-child .filter-button--active").innerText;
-// const activeSort = document.querySelector(".filter-group:last-child .filter-button--active").innerText;
-
-// Standardvärden (om "All" är valt)
-// let title = "🍽️ Recipe card title";
-// let cuisine = "Type";
-// let time = "XX minutes";
-
-// Filtrering med if/else
-// if (activeCuisine === "Italy") {
-//   title = "🍝 Spaghetti Carbonara";
-//   cuisine = "Italian";
-//   time = "25 minutes";
-// } else if (activeCuisine === "USA") {
-//   title = "🍔 Cheeseburger";
-//   cuisine = "USA";
-//   time = "20 minutes";
-// } else if (activeCuisine === "China") {
-//   title = "🥡 Fried Rice";
-//   cuisine = "China";
-//   time = "30 minutes";
-// }
-
-// Uppdatera kortet med nya värden
-// titleEl.innerText = title;
-// cuisineEl.innerHTML = `<span>Cuisine:</span> ${cuisine}`;
-
-// Lägg på sorteringspil ⬆️ eller ⬇️
-// timeEl.innerHTML = `<span>Time:</span> ${time} ${activeSort === "Ascending" ? "⬆️" : "⬇️"}`;
-// };
-
-// Event: klick på filterknappar
-// document.querySelectorAll(".filter-button").forEach(button => {
-// button.addEventListener("click", () => {
-// const group = button.closest(".filter-group__buttons");
-
-// Ta bort active från alla knappar i samma grupp
-// group.querySelectorAll(".filter-button").forEach(btn => btn.classList.remove("filter-button--active"));
-
-// Lägg till active på klickad knapp
-// button.classList.add("filter-button--active");
-
-// Uppdatera receptkortet
-//     updateCard();
-//   });
-// });
-
-// Kör en gång när sidan laddas
-// updateCard();
-
-
-/* Version 2
-  ┌─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-  │ Nedanstående är för kommande veckor tror jag, där man kan dynamiskt hämta recept och filter, m.m från           │
-  │ constants/js                                                                                                    │
-  │ fil                                                                                                             │
-  └─────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
- */
-
-// // #### En array med olika filtergrupper som vi vill kunna filtrera recepten på
-// const filters = [
-//   {
-//     key: "diets",
-//     values: [
-//       "Vegan",
-//       "Vegetarian",
-//       "Gluten-free",
-//       "Dairy-free"
-//     ],
-//   },
-//   {
-//     key: "cuisine",
-//     values: [
-//       "Mediterranean",
-//       "Middle Eastern",
-//       "Asian", "Italian",
-//       "Mexican"
-//     ]
-//   },
-//   {
-//     key: "cookingTime",
-//     values: [
-//       "Under 15 min",
-//       "15-30 min",
-//       "30-60 min",
-//       "over 60 min"
-//     ]
-//   },
-//   {
-//     key: "qtyIngredients",
-//     values: [
-//       "Under 5 ingredients",
-//       "6-10 ingredients",
-//       "11-15 ingredients",
-//       "Over 16 ingredients"
-//     ]
-//   },
-// ]
-
-// // #### Skriver ut hela filters-arrayen i konsolen
-// // console.log(filters);
-
-// // #### Skriver ut värdena (values) för det andra filtret (index 1), alltså "cuisine"
-// // console.log(filters[1].values);
-
-// // #### Skapar en ny array med endast nycklarna ("diets", "cuisine", osv.)
-// // console.log("alla keys", filters.map(filter => filter.key));
-
-// // #### Skapar en ny array med alla värde-arrayer från varje filter
-// // console.log("alla values", filters.map(filter => filter.values));
-
-// // #### Söker efter första objektet där key är "cuisine"
-// // console.log("hej", filters.find(filter => filter.key === "cuisine"));
-
-// // #### Försöker skapa en array med de första värdena i varje objekt – men ger inte vad man tror!
-// // console.log(filters.map(filter => Object.values(filter)[0]).flat());
-
-// // #### Loopar igenom varje filter och skriver ut key + values som formaterad text
-// // filters.forEach(filter => {
-// //   console.log(`${filter.key}:`, filter.values);
-// // });
-
-// // #### Funktion för att skapa HTML för varje recept och visa dem på sidan
-// const renderRecipes = (recipesToRender) => {
-//   const recipeCards = recipesToRender.map(recipe => {
-//     return `
-//       <article class="recipe-card">
-//         <img class="recipe-card__image" src="${recipe.image}" alt="${recipe.title}" />
-//         <div class="recipe-card__content">
-//           <h3 class="recipe-card__title">${recipe.title}</h3>
-//           <p class="recipe-card__cuisine"><span>Cuisine:</span> ${recipe.cuisine}</p>
-//           <p class="recipe-card__time"><span>Time:</span> ${recipe.cookingTime}</p>
-//           <div class="recipe-card__ingredients">
-//             <h4 class="recipe-card__ingredients-title">Ingredients</h4>
-//             <ul class="recipe-card__ingredients-list">
-//               ${recipe.ingredients.map(ing => `<li class="recipe-card__ingredients-item">${ing}</li>`).join("")}
-//             </ul>
-//           </div>
-//         </div>
-//       </article>
-//     `;
-//   });
-
-//   // #### Hämtar sektionen i HTML där recepten ska visas
-//   const recipeSection = document.querySelector(".recipe-library__items");
-
-//   // #### Lägger in alla receptkort i sektionen
-//   recipeSection.innerHTML = recipeCards.join("");
-// };
-
-// // #### Funktion för att hämta användarens valda filter och sorteringsinställning
-// const getSelectedFilterAndSort = () => {
-//   const selected = document.querySelectorAll(".filter-button--active");
-
-//   let cuisineFilter = "All";
-//   let sortDirection = "Descending";
-
-//   // #### Går igenom varje aktiv knapp för att se vilken grupp den tillhör
-//   selected.forEach(button => {
-//     const groupTitle = button.closest(".filter-group").querySelector(".filter-group__title").innerText;
-
-//     if (groupTitle.includes("kitchen")) {
-//       cuisineFilter = button.innerText;
-//     }
-
-//     if (groupTitle.includes("time")) {
-//       sortDirection = button.innerText;
-//     }
-//   });
-
-//   return { cuisineFilter, sortDirection };
-// };
-
-// // #### Funktion för att filtrera och sortera recepten beroende på användarens val
-// const filterAndSortRecipes = () => {
-//   const { cuisineFilter, sortDirection } = getSelectedFilterAndSort();
-
-//   let result = [...recipes];
-
-//   // #### Filtrerar på kök om ett specifikt val gjorts
-//   if (cuisineFilter !== "All") {
-//     result = result.filter(recipe => recipe.cuisine === cuisineFilter);
-//   }
-
-//   // #### Sorterar recepten utifrån tillagningstid (strängar som "Under 15 min" översätts till siffror)
-//   const getTimeValue = (timeString) => {
-//     if (timeString.includes("Under 15")) return 10;
-//     if (timeString.includes("15-30")) return 22.5;
-//     if (timeString.includes("30-60")) return 45;
-//     if (timeString.includes("Over 60")) return 90;
-//     return 999; // fallback
-//   };
-
-//   // #### Sorterar recepten på tillagningstid (OBS: just nu funkar ej eftersom time är sträng!)
-//   result.sort((a, b) => {
-//     const timeA = getTimeValue(a.cookingTime);
-//     const timeB = getTimeValue(b.cookingTime);
-
-//     if (sortDirection === "Ascending") return timeA - timeB;
-//     return timeB - timeA;
-//   });
-
-//   renderRecipes(result);
-// };
-
-// // #### Lägger till klick-event på varje filterknapp
-// document.querySelectorAll(".filter-button").forEach(button => {
-//   button.addEventListener("click", () => {
-//     const group = button.closest(".filter-group__buttons");
-
-//     // #### Tar bort aktiv klass från alla knappar i gruppen
-//     group.querySelectorAll(".filter-button").forEach(btn => {
-//       btn.classList.remove("filter-button--active");
-//     });
-
-//     // #### Gör den klickade knappen aktiv
-//     button.classList.add("filter-button--active");
-
-//     // #### Filtrerar och sorterar recepten baserat på det nya valet
-//     filterAndSortRecipes();
-//   });
-// });
-
 // // #### Lista med recept – varje recept är ett objekt med detaljer som vi kan filtrera på
 const recipes = [
   {
@@ -260,7 +23,7 @@ const recipes = [
     title: "Spaghetti Carbonara",
     image: "https://dummyimage.com/600x400/000/fff",
     servings: 2,
-    diets: ["Gluten-free"], // maybe with gluten-free pasta!
+    diets: ["Gluten-free"],
     cuisine: "Italian",
     readyInMinutes: 20,
     qtyIngredients: "6-10 ingredients",
@@ -291,7 +54,8 @@ const recipes = [
       "Tomatoes"
     ],
     pricePerServing: 4.0,
-    popularity: 78
+    popularity: 78,
+    featured: true,
   },
   {
     id: 4,
@@ -325,8 +89,11 @@ const showRecipes = (recipesToShow) => {
   const showRecipesWrapper = document.getElementById('recipes');
 
   // #### Funktion för att skapa HTML för varje recept och visa dem på sidan
-  const recipeCard = recipesToShow.map(recipe => `
-    <article class="recipe-card">
+  const recipeCard = recipesToShow.map(recipe => {
+    // Kolla om receptet ska vara "featured"
+    const featuredClass = recipe.featured ? "recipe-card--featured" : "";
+    return `
+    <article class="recipe-card ${featuredClass}">
       <img class="recipe-card__image" src="${recipe.image}" alt="${recipe.title}" />
         <div class="recipe-card__content">
           <h3 class="recipe-card__title">${recipe.title}</h3>
@@ -340,7 +107,7 @@ const showRecipes = (recipesToShow) => {
           </div>
         </div>
     </article>
-  `).join("");
+  `}).join("");
 
   // #### Lägger in alla receptkort i sektionen
   showRecipesWrapper.innerHTML = recipeCard;
@@ -356,79 +123,126 @@ const showRandomRecipe = () => {
   const randomRecipe = [recipes[Math.floor(Math.random() * recipes.length)]];
   const randomDiceIcon = diceNumbers[Math.floor(Math.random() * diceNumbers.length)];
   const iconEl = buttonRandomElement.querySelector("[data-lucide], svg");
-
   iconEl.setAttribute("data-lucide", randomDiceIcon);
   lucide.createIcons();
+  randomRecipe[0].featured = false;
   showRecipes(randomRecipe);
 }
 
 // #### Knappar för filtrering
 buttonRandomElement.addEventListener('click', showRandomRecipe);
 
-// #### Initiera Lucide icons
-lucide.createIcons();
-
-// #### 1. Här definierar vi vilka filtergrupper vi vill ha
-// key = nyckel för att kunna läsa/filtrera
-// label = rubrik som ska synas i UI
-// values = alternativen som ska bli knappar
-// style = CSS-klass för knapparna (primary/secondary)
+// En lista (array) med filtergrupper
 const filterConfig = [
   {
     key: "cuisine",
-    label: "Filter på kök",
+    title: "Filter on kitchen",
     style: "filter-button--primary",
-    values: ["All", "Mediterranean", "Middle Eastern", "Asian", "Italian"]
+    values: ["All", "Italian", "Mediterranean", "Asian", "Middle Eastern"]
   },
   {
     key: "sort",
-    label: "Sortera på tid",
+    title: "Sort on time",
     style: "filter-button--secondary",
     values: ["Descending", "Ascending"]
   }
 ];
 
-// #### 2. State = det användaren valt just nu
-const state = {
-  cuisine: "All",
-  sort: "Descending"
-};
+// Funktion för att rendera filter-knapparna
+const renderFilters = () => {
+  // Loopa igenom varje filtergrupp
+  filterConfig.forEach(group => {
+    // Hämta rätt container (t.ex. #filter-cuisine, #filter-sort)
+    const container = document.getElementById(`filter-${group.key}`);
 
-// #### 3. Funktion som bygger upp filtergrupperna från config
-function renderFilters() {
-  const groupsHtml = filterConfig.map(group => {
-    const buttons = group.values.map(val => {
-      const isActive = state[group.key] === val;
-      return `
-        <button
-          class="filter-button ${group.style} ${isActive ? "filter-button--active" : ""}"
-          data-group="${group.key}"
-          data-value="${val}">
+    // Bygg knapparna som HTML
+    let buttonsHtml = "";
+    group.values.forEach((val, index) => {
+      // Första knappen (index 0) får "active"
+      const activeClass = index === 0 ? "filter-button--active" : "";
+      buttonsHtml += `
+        <button class="filter-button ${group.style} ${activeClass}">
           ${val}
         </button>
       `;
-    }).join("");
+    });
 
-    return `
-      <div class="filter-group">
-        <h2 class="filter-group__title">${group.label}</h2>
-        <div class="filter-group__buttons">${buttons}</div>
-      </div>
+    // Lägg in rubrik + knappar i containern
+    container.innerHTML = `
+      <h2 class="filter-group__title">${group.title}</h2>
+      <div class="filter-group__buttons">${buttonsHtml}</div>
     `;
-  }).join("");
+  });
 
-  // Behåll din random-knapp längst till höger
-  const randomBtn = `
-    <button id="btn-random" class="filter-button filter-button--secondary">
-      <i data-lucide="dice-5"></i>
-    </button>
-  `;
-
-  filtersRoot.innerHTML = groupsHtml + randomBtn;
-
-  // Rendera om Lucide-ikonen
+  // Om du använder Lucide för ikoner
   lucide.createIcons();
+};
 
-  // Sätt tillbaka click-lyssnaren på random-knappen (den renderas om varje gång)
-  document.getElementById("btn-random").addEventListener("click", showRandomRecipe);
+// #### Initiera Lucide icons
+lucide.createIcons();
+
+// #### 1. Rendera filter-knapparna direkt när sidan laddas
+renderFilters();
+
+// #### 2. State = nuvarande val
+let activeCuisine = "All";
+let activeSort = "Descending";
+
+// #### 3. Funktion för att filtrera och sortera recepten
+function filterAndSortRecipes() {
+  let list = [...recipes]; // kopia
+
+  // Filtrera på kök
+  if (activeCuisine !== "All") {
+    list = list.filter(r => r.cuisine === activeCuisine);
+  }
+
+  // Sortera på tid
+  list.sort((a, b) => {
+    return activeSort === "Ascending"
+      ? a.readyInMinutes - b.readyInMinutes
+      : b.readyInMinutes - a.readyInMinutes;
+  });
+
+  // Visa recepten
+  showRecipes(list);
 }
+
+// #### 4. Funktion för att koppla klick-händelser till knapparna
+function attachFilterListeners() {
+  const allButtons = document.querySelectorAll(".filter-button");
+
+  allButtons.forEach(button => {
+    button.addEventListener("click", () => {
+      const group = button.closest(".filter-group");
+
+      if (group) {
+        const groupTitle = group.querySelector("h2").innerText;
+
+        if (groupTitle.includes("kitchen")) {
+          activeCuisine = button.innerText;
+        } else if (groupTitle.includes("time")) {
+          activeSort = button.innerText;
+        }
+
+        // Ta bort active från alla knappar i samma grupp
+        const groupButtons = group.querySelectorAll(".filter-button");
+        groupButtons.forEach(b => b.classList.remove("filter-button--active"));
+
+        // Lägg till active på den klickade
+        button.classList.add("filter-button--active");
+
+        filterAndSortRecipes();
+      } else {
+        // Om knappen INTE hör till en filtergrupp (random-knappen)
+        showRandomRecipe();
+      }
+    });
+  });
+}
+
+// #### 5. Koppla listeners (efter att filter är renderade)
+attachFilterListeners();
+
+// #### 6. Visa startlistan
+filterAndSortRecipes();

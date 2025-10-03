@@ -210,11 +210,37 @@ body {
   border-color: #ff6b8a;
 }
 
-/* Recipe grid */
-.recipe-library__grid {
+/* #### Grid för recept */
+.recipe-library__items {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   gap: var(--spacing-lg);
+
+  /* Mobil (default): 1 kolumn */
+  grid-template-columns: 1fr;
+}
+
+/* iPad: 2 kolumner */
+@media (min-width: 600px) {
+  .recipe-library__items {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop: 3 kolumner */
+@media (min-width: 900px) {
+  .recipe-library__items {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Featured = tar upp 2 kolumner och 2 rader */
+.recipe-card--featured {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+.recipe-card--featured .recipe-card__image {
+  height: 300px; /* gör bilden större */
 }
 
 /* Recipe cards */
