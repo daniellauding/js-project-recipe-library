@@ -1,4 +1,4 @@
-// // #### Lista med recept – varje recept är ett objekt med detaljer som vi kan filtrera på
+// Local recipes – fallback
 const recipes = [
   {
     id: 1,
@@ -79,71 +79,147 @@ const recipes = [
   }
 ];
 
-// This is the website web address we ask for new recipes from
+// This is the website address where we ask for new recipes from the internet
 const URL = `https://api.spoonacular.com/recipes/random?number=15&apiKey=f9a94c32c70844888eebfba758e10f35`
 
-// This is a magic function that tries to get recipes from a box on your computer or from the internet
+// LOADER FUNCTION
+// Function to show the loader (the spinning circle while waiting)
+const showLoader = () => {
+  const recipesContainer = document.getElementById('recipes');
+  if (recipesContainer) {
+    recipesContainer.innerHTML = `
+      <div class="loader-container">
+        <div class="loader"></div>
+        <p class="loader-text">Loading delicious recipes...</p>
+      </div>
+    `;
+  }
+};
+
+// This is a magic function that tries to get recipes from your computer or from the internet
 const fetchRecipes = async () => {
+  
+  // Show the loader while we're getting recipes
+  showLoader();
+  
+  // CRITICAL: Wait a tiny bit to let the browser actually PAINT the loader to the screen!
+  // Without this, JavaScript is too fast and replaces the loader before it's visible
+  await new Promise(resolve => setTimeout(resolve, 50));
+  
+  // Start timer to ensure minimum loader display time
+  const startTime = Date.now();
+  const minLoadTime = 1500; // Minimum 1500ms (1.5 seconds) to show loader
   
   try {
     
-    // First, we try to find recipes saved on your computer already (localStorage)
+    // First, we try to find recipes saved on your computer already (like a cookie jar!)
     const cachedRecipes = localStorage.getItem("recipes");
 
     if (cachedRecipes) {
-      // If we found some, we open the box and use those recipes
+      // If we found some saved recipes, we use those instead!
       console.log("Using cached recipes from localStorage");
       const parsedCache = JSON.parse(cachedRecipes);
       
-      // #### Kontrollera om det är direkt en array eller {recipes: [...]}
+      // Check if it's a list or wrapped in an object
       const recipeArray = Array.isArray(parsedCache) ? parsedCache : parsedCache.recipes || [];
+      
+      // Wait for minimum load time before showing recipes
+      // Calculate how much time has passed since the loader was shown
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadTime - elapsedTime);
+      
+      // If we loaded data too quickly, wait the remaining time to keep loader visible
+      // This ensures users always see the loading state, improving perceived quality
+      if (remainingTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
+      
       console.table(recipeArray);
       return recipeArray;
     }
     
-    // If the box was empty, we ask the internet for new recipes
+    // If we don't have saved recipes, we ask the internet for new ones
     const response = await fetch(URL);
     
-    // If the internet says something is wrong, we throw an error
+    // If the internet says something went wrong, we handle it
     if (!response.ok) {
-      // #### Special handling for quota exceeded (status 402 = Payment Required)
+      // Special case: we used up all our free recipes for today!
       if (response.status === 402) {
-        console.warn('🎯 API quota exceeded for today! 😎 Using local recipes instead.');
-        showQuotaMessage(); // ← Show user-friendly message
-        return recipes; // ← Return local recipes when quota is reached
+        console.log('');
+        console.log('═══════════════════════════════════════════');
+        console.log('🚨 API QUOTA LIMIT REACHED! 🚨');
+        console.log('═══════════════════════════════════════════');
+        console.log('📊 Status: Daily API request limit exceeded (402)');
+        console.log('🔄 Fallback: Showing local recipes instead');
+        console.log('💡 Tip: Quota resets at midnight (API time)');
+        console.log('═══════════════════════════════════════════');
+        console.log('');
+        showQuotaMessage(); // Show a nice message to the user
+        
+        // Wait for minimum load time before showing recipes
+        const elapsedTime = Date.now() - startTime;
+        const remainingTime = Math.max(0, minLoadTime - elapsedTime);
+        if (remainingTime > 0) {
+          await new Promise(resolve => setTimeout(resolve, remainingTime));
+        }
+        
+        return recipes; // Use the recipes we have in our code
       }
       throw Error(`HTTP error! Status: ${response.status}`);
     }
     
-    // If everything is fine, we open the new recipes
+    // If everything worked, we get the new recipes
     const data = await response.json();
     
-    // #### API:et returnerar {recipes: [...]} så vi behöver extrahera recepten
+    // The internet gives us recipes in a special format, so we extract them
     const apiRecipes = data.recipes || [];
     
-    // #### Kontrollera att vi fick en array med recept
+    // Make sure we actually got recipes back
     if (!Array.isArray(apiRecipes) || apiRecipes.length === 0) {
-      console.log("API returnerade inga recept, använder lokala recept");
+      console.log("API didn't return any recipes, using local recipes instead");
+      
+      // Wait for minimum load time before showing recipes
+      const elapsedTime = Date.now() - startTime;
+      const remainingTime = Math.max(0, minLoadTime - elapsedTime);
+      if (remainingTime > 0) {
+        await new Promise(resolve => setTimeout(resolve, remainingTime));
+      }
+      
       return recipes;
     }
     
-    // We save the new recipes into the box on your computer for later (localStorage)
+    // Save the new recipes on the computer for next time (so we don't have to ask again)
     localStorage.setItem("recipes", JSON.stringify(apiRecipes));
     console.log("Fetched recipes from API");
     console.table(apiRecipes);
     
-    // Return the new recipes to the caller
+    // Wait for minimum load time before showing recipes
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = Math.max(0, minLoadTime - elapsedTime);
+    if (remainingTime > 0) {
+      await new Promise(resolve => setTimeout(resolve, remainingTime));
+    }
+    
+    // Give the recipes back to whoever asked for them
     return apiRecipes;
   } catch (error) {
-    // Uh oh! Something went wrong. Let's tell the computer and use the recipes we already know.
+    // Uh oh! Something went wrong. Let's tell the console and use our backup recipes.
     console.error('Error fetching recipes:', error);
     console.log('Using local recipes from our code as a fallback')
-    return recipes; // fallback to local recipes if fetch or localStorage fails
+    
+    // Wait for minimum load time before showing recipes
+    const elapsedTime = Date.now() - startTime;
+    const remainingTime = Math.max(0, minLoadTime - elapsedTime);
+    if (remainingTime > 0) {
+      await new Promise(resolve => setTimeout(resolve, remainingTime));
+    }
+    
+    return recipes; // Use the recipes we have in our code if anything fails
     
   }
 }
 
-// #### Funktion för att visa quota-meddelande till användaren
+// Function to show a message when we've used up our daily API quota
 const showQuotaMessage = () => {
   const recipesWrapper = document.getElementById('recipes');
   if (recipesWrapper) {
@@ -166,7 +242,7 @@ const showQuotaMessage = () => {
     `;
     recipesWrapper.insertBefore(quotaMessage, recipesWrapper.firstChild);
     
-    // #### Ta bort meddelandet efter 5 sekunder
+    // Remove the message after 5 seconds so it doesn't stay forever
     setTimeout(() => {
       if (quotaMessage.parentNode) {
         quotaMessage.parentNode.removeChild(quotaMessage);
@@ -175,81 +251,128 @@ const showQuotaMessage = () => {
   }
 };
 
-// #### Variabel för att lagra alla recept (från API eller lokala)
-let allRecipes = recipes; // ← Börja med lokala recept som backup
+// This is a box where we keep all the recipes we found
+let allRecipes = recipes; // Start with the recipes we have in our code
 
-// #### Starta appen genom att hämta recept
-fetchRecipes().then(fetchedRecipes => {
-  allRecipes = fetchedRecipes; // ← Spara API-recepten här
+// These remember what filters the user picked
+let activeCuisine = "All";
+let activePopularity = "All";
+let activeSort = "Descending";
+let searchText = ""; // This remembers what the user typed in the search box
+let showOnlyFavorites = false; // This remembers if we're showing only favorites
+
+// Start the app by getting recipes from the internet or computer
+// Use async/await to ensure proper timing
+(async () => {
+  const fetchedRecipes = await fetchRecipes();
+  allRecipes = fetchedRecipes; // Save the recipes we got
   
-  // #### Visa recepten när de är klara
+  // Show the recipes on the page (this automatically replaces the loader!)
   showRecipes(allRecipes);
-  filterAndSortRecipes(); // ← Uppdatera även filtreringen
-});
+  filterAndSortRecipes(); // Update the filters too
+})();
 
-// #### Hämta element från DOMet
+// Find the random button on the page so we can use it later
 const buttonRandomElement = document.getElementById('btn-random');
 const filtersRoot = document.querySelector(".recipe-library__filters");
 
-// #### 
+// Find the search box on the page
+const searchInput = document.getElementById('searchInput');
+
+// Find the favorites button on the page
+const buttonFavoritesElement = document.getElementById('btn-favorites');
+
+// LIKE FUNCTIONALITY - Keep track of which recipes are liked
+// This box stores recipe IDs that the user has liked (saved on the computer)
+let likedRecipes = JSON.parse(localStorage.getItem('likedRecipes')) || [];
+
+// Function to check if a recipe is liked
+const isRecipeLiked = (recipeId) => {
+  return likedRecipes.includes(recipeId);
+};
+
+// Function to add or remove a like from a recipe (toggle)
+const toggleLike = (recipeId) => {
+  if (isRecipeLiked(recipeId)) {
+    // If already liked, remove it from the list
+    likedRecipes = likedRecipes.filter(id => id !== recipeId);
+    console.log(`💔 Unliked recipe #${recipeId}. Total likes: ${likedRecipes.length}`);
+  } else {
+    // If not liked, add it to the list
+    likedRecipes.push(recipeId);
+    console.log(`❤️ Liked recipe #${recipeId}. Total likes: ${likedRecipes.length}`);
+  }
+  // Save the updated list to the computer so it remembers
+  localStorage.setItem('likedRecipes', JSON.stringify(likedRecipes));
+};
+
+// This function shows recipes on the screen
 const showRecipes = (recipesToShow) => {
-  // #### Hämtar sektionen i HTML där recepten ska visas
+  // Find the place where recipes should go on the page
   const showRecipesWrapper = document.getElementById('recipes');
 
-  // #### Säkerhetskontroll: kontrollera att recipesToShow är en array
+  // Safety check: make sure recipesToShow is a list of recipes
   if (!Array.isArray(recipesToShow)) {
-    console.error("recipesToShow är inte en array:", recipesToShow);
-    recipesToShow = recipes; // ← Använd backup-recept
+    console.error("recipesToShow is not a list:", recipesToShow);
+    recipesToShow = recipes; // Use our backup recipes if something went wrong
   }
 
   if (recipesToShow.length === 0) {
-    // Visa tomt läge
+    // If no recipes match, show a sad message
     showRecipesWrapper.innerHTML = `
       <div class="empty-state">
-        <p>😕 Inga recept matchar ditt val.</p>
+        <p>😕 No recipes match what you're looking for.</p>
         <button class="filter-button filter-button--secondary" id="reset-filters">
-          Visa alla recept
+          Show all recipes
         </button>
       </div>
     `;
 
-    // Event för reset-knappen
+    // When someone clicks the reset button, show all recipes again
     document.getElementById("reset-filters").addEventListener("click", () => {
       activeCuisine = "All";
       activePopularity = "All";
       activeSort = "Descending";
+      searchText = ""; // Clear the search box
+      searchInput.value = ""; // Empty the search box on screen
+      showOnlyFavorites = false; // Turn off favorites filter
+      buttonFavoritesElement.classList.remove('filter-button--active'); // Make favorites button not active
       filterAndSortRecipes();
-      // Uppdatera knapparnas aktiva status
+      // Update which buttons look active
       renderFilters();
     });
     return;
   }
 
-  // #### Funktion för att skapa HTML för varje recept och visa dem på sidan
+  // Make a recipe card for each recipe to show on the page
   const recipeCard = recipesToShow.map(recipe => {
-    // Kolla om receptet ska vara "featured"
+    // Check if this recipe should be special/featured
     const featuredClass = recipe.featured ? "recipe-card--featured" : "";
     
-    // #### Hantera olika ingredient-format från API vs lokala recept
+    // Make a list of ingredients - they come in different formats from different places
     let ingredientsList = "";
     if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
-      // ← Lokala recept: ingredients är array av strängar
+      // Local recipes: ingredients is a simple list of words
       ingredientsList = recipe.ingredients.map(ing => `<li class="recipe-card__ingredients-item">${ing}</li>`).join("");
     } else if (recipe.extendedIngredients && Array.isArray(recipe.extendedIngredients)) {
-      // ← API-recept: extendedIngredients är array av objekt
+      // Internet recipes: extendedIngredients is a list of objects with more info
       ingredientsList = recipe.extendedIngredients.map(ing => `<li class="recipe-card__ingredients-item">${ing.original || ing.name}</li>`).join("");
     } else {
-      // ← Backup om inga ingredienser finns
+      // If we can't find ingredients, show a message
       ingredientsList = `<li class="recipe-card__ingredients-item">Ingredients not available</li>`;
     }
+    
+    // Check if this recipe is liked to show filled or empty heart
+    const isLiked = isRecipeLiked(recipe.id);
+    const heartClass = isLiked ? 'recipe-card__like--active' : '';
     
     return `
     <article class="recipe-card ${featuredClass}">
       <img class="recipe-card__image" src="${recipe.image}" alt="${recipe.title}" />
+        <span class="recipe-card__like ${heartClass}" data-recipe-id="${recipe.id}">
+          <i data-lucide="heart"></i>
+        </span>
         <div class="recipe-card__content">
-          <span class="recipe-card__like">
-            <i data-lucide="heart"></i>
-          </span>
           <h3 class="recipe-card__title">${recipe.title}</h3>
           <p class="recipe-card__cuisine"><span>Cuisine:</span> ${recipe.cuisine || (recipe.cuisines && recipe.cuisines.length > 0 ? recipe.cuisines[0] : "International")}</p>
           <p class="recipe-card__time"><span>Time:</span> ${recipe.readyInMinutes || "Unknown"} min</p>
@@ -263,34 +386,80 @@ const showRecipes = (recipesToShow) => {
     </article>
   `}).join("");
 
-  // #### Lägger in alla receptkort i sektionen
+  // Put all the recipe cards on the page
   showRecipesWrapper.innerHTML = recipeCard;
   lucide.createIcons();
+  
+  // ATTACH LIKE LISTENERS - Make the hearts clickable!
+  // Find all the heart icons on the page
+  const likeButtons = document.querySelectorAll('.recipe-card__like');
+  likeButtons.forEach(likeButton => {
+    likeButton.addEventListener('click', (event) => {
+      // Get which recipe was clicked
+      const recipeId = parseInt(likeButton.getAttribute('data-recipe-id'));
+      
+      // Toggle the like (add or remove)
+      toggleLike(recipeId);
+      
+      // Update the heart appearance (fill it or empty it)
+      if (isRecipeLiked(recipeId)) {
+        likeButton.classList.add('recipe-card__like--active');
+      } else {
+        likeButton.classList.remove('recipe-card__like--active');
+      }
+    });
+  });
 };
 
-// #### Recepten visas nu via initializeRecipes() funktionen
-
-// #### Funktion för att visa vilket recept som helst
+// Function that picks any random recipe and shows it
 const showRandomRecipe = () => {
+  // List of different dice icons we can show
   const diceNumbers = ["dice-1", "dice-2", "dice-3", "dice-4", "dice-5", "dice-6"];
+  // Pick a random recipe from all our recipes
   const randomRecipe = [allRecipes[Math.floor(Math.random() * allRecipes.length)]];
+  // Pick a random dice icon to show
   const randomDiceIcon = diceNumbers[Math.floor(Math.random() * diceNumbers.length)];
+  // Find the icon on the button
   const iconEl = buttonRandomElement.querySelector("[data-lucide], svg");
+  // Change it to the random dice
   iconEl.setAttribute("data-lucide", randomDiceIcon);
   lucide.createIcons();
+  // Make sure the random recipe isn't featured
   randomRecipe[0].featured = false;
+  // Show just this one recipe
   showRecipes(randomRecipe);
 }
 
-// #### Knappar för filtrering
+// When someone clicks the random button, show a random recipe
 buttonRandomElement.addEventListener('click', showRandomRecipe);
 
-// En lista (array) med filtergrupper
+// FAVORITES BUTTON - Show only liked recipes when clicked!
+buttonFavoritesElement.addEventListener('click', () => {
+  // Toggle between showing all recipes and only favorites
+  showOnlyFavorites = !showOnlyFavorites;
+  
+  // Update button appearance to show if it's active
+  if (showOnlyFavorites) {
+    buttonFavoritesElement.classList.add('filter-button--active');
+  } else {
+    buttonFavoritesElement.classList.remove('filter-button--active');
+  }
+  
+  // Show the recipes (filtered by favorites if active)
+  filterAndSortRecipes();
+});
+
+// ===== FILTER CONFIGURATION =====
+// Configuration for all filter groups
+// Cuisine filters: Limited to 4-5 quick filters, rest shown in sidebar
 const filterConfig = [
   {
     key: "cuisine",
     title: "Filter on kitchen",
     style: "filter-button--primary",
+    // Quick filters (4-5 most common) - shown in main view
+    quickValues: ["All", "Italian", "Asian", "Mediterranean", "American"],
+    // All cuisine options - shown in sidebar
     values: ["All", "Italian", "Mediterranean", "Asian", "Middle Eastern", "European", "American", "Southern", "Mexican", "French", "Indian", "Thai"]
   },
   {
@@ -307,17 +476,21 @@ const filterConfig = [
   }
 ];
 
-// Funktion för att rendera filter-knapparna
+// ===== RENDER FILTERS FUNCTION =====
+// Creates all filter buttons on the page
 const renderFilters = () => {
-  // Loopa igenom varje filtergrupp
+  // Go through each filter group (cuisine, popularity, sort)
   filterConfig.forEach(group => {
-    // Hämta rätt container (t.ex. #filter-cuisine, #filter-sort)
+    // Find the right spot on the page for this group
     const container = document.getElementById(`filter-${group.key}`);
 
-    // Bygg knapparna som HTML
+    // For cuisine filters, use quick values (4-5 filters) in main view
+    const valuesToShow = group.quickValues || group.values;
+    
+    // Build the buttons as HTML text
     let buttonsHtml = "";
-    group.values.forEach((val, index) => {
-      // Första knappen (index 0) får "active"
+    valuesToShow.forEach((val, index) => {
+      // The first button starts as active/selected
       const activeClass = index === 0 ? "filter-button--active" : "";
       buttonsHtml += `
         <button class="filter-button ${group.style} ${activeClass}">
@@ -326,36 +499,99 @@ const renderFilters = () => {
       `;
     });
 
-    // Lägg in rubrik + knappar i containern
+    // Put the title and buttons into the container
     container.innerHTML = `
       <h2 class="filter-group__title">${group.title}</h2>
       <div class="filter-group__buttons">${buttonsHtml}</div>
     `;
   });
 
-  // Om du använder Lucide för ikoner
+  // Render sidebar cuisine filters (all options)
+  renderSidebarFilters();
+
+  // Make the icons appear
   lucide.createIcons();
 };
 
-// #### Initiera Lucide icons
+// ===== RENDER SIDEBAR FILTERS =====
+// Populates the sidebar with all cuisine filter options
+const renderSidebarFilters = () => {
+  const cuisineConfig = filterConfig.find(group => group.key === "cuisine");
+  const sidebarContainer = document.getElementById('sidebar-cuisine-filters');
+  
+  if (!cuisineConfig || !sidebarContainer) return;
+  
+  // Build all cuisine buttons for sidebar
+  let buttonsHtml = "";
+  cuisineConfig.values.forEach((val, index) => {
+    const activeClass = index === 0 ? "filter-button--active" : "";
+    buttonsHtml += `
+      <button class="filter-button ${cuisineConfig.style} ${activeClass} sidebar-cuisine-btn" data-cuisine="${val}">
+        ${val}
+      </button>
+    `;
+  });
+  
+  sidebarContainer.innerHTML = buttonsHtml;
+};
+
+// Make all the icons appear on the page
 lucide.createIcons();
 
-// #### 1. Rendera filter-knapparna direkt när sidan laddas
+// Create all the filter buttons when the page loads
 renderFilters();
 
-// #### 2. State = nuvarande val
-let activeCuisine = "All";
-let activePopularity = "All";
-let activeSort = "Descending";
-
-// #### 3. Funktion för att filtrera och sortera recepten
+// This function filters and sorts the recipes based on what the user picked
 function filterAndSortRecipes() {
-  let list = [...allRecipes]; // ← Använd allRecipes istället för recipes
+  let list = [...allRecipes]; // Make a copy of all recipes to work with
 
-  // Filtrera på kök
+  // Filter by favorites (if favorites button is active)
+  if (showOnlyFavorites) {
+    list = list.filter(recipe => isRecipeLiked(recipe.id));
+    
+    // Show in console how many favorites we found
+    console.log(`📌 Showing ${list.length} favorite recipe(s)`);
+    
+    // If no recipes are liked, show a message
+    if (list.length === 0) {
+      const showRecipesWrapper = document.getElementById('recipes');
+      showRecipesWrapper.innerHTML = `
+        <div class="empty-state">
+          <p>💔 You haven't liked any recipes yet!</p>
+          <p>Click the ❤️ on a recipe to add it to your favorites.</p>
+        </div>
+      `;
+      return;
+    }
+  }
+
+  // Filter by search text (if user typed something)
+  if (searchText !== "") {
+    list = list.filter(recipe => {
+      // Check if the recipe title contains what the user typed
+      const titleMatch = recipe.title.toLowerCase().includes(searchText.toLowerCase());
+      
+      // Check if any ingredient contains what the user typed
+      let ingredientMatch = false;
+      if (recipe.ingredients && Array.isArray(recipe.ingredients)) {
+        ingredientMatch = recipe.ingredients.some(ing => 
+          ing.toLowerCase().includes(searchText.toLowerCase())
+        );
+      } else if (recipe.extendedIngredients && Array.isArray(recipe.extendedIngredients)) {
+        ingredientMatch = recipe.extendedIngredients.some(ing => 
+          (ing.original || ing.name || "").toLowerCase().includes(searchText.toLowerCase())
+        );
+      }
+      
+      // Keep the recipe if either title or ingredient matches
+      return titleMatch || ingredientMatch;
+    });
+  }
+
+  // Filter by kitchen/cuisine type
   if (activeCuisine !== "All") {
     list = list.filter(r => {
-      // #### Hantera både lokala recept (cuisine) och API-recept (cuisines)
+      // Handle both local recipes (cuisine) and internet recipes (cuisines)
       if (r.cuisine) {
         return r.cuisine === activeCuisine;
       } else if (r.cuisines && Array.isArray(r.cuisines)) {
@@ -365,34 +601,34 @@ function filterAndSortRecipes() {
     });
   }
 
-  // #### Filtrera på popularitet
+  // Filter by popularity
   if (activePopularity !== "All") {
     list = list.filter(r => {
-      const popularity = r.popularity || r.aggregateLikes || 0; // ← API kan använda aggregateLikes
+      const popularity = r.popularity || r.aggregateLikes || 0; // Internet recipes use aggregateLikes
       
       if (activePopularity === "Very Popular") {
-        return popularity >= 85; // ← 85+ = Very Popular
+        return popularity >= 85; // 85 or higher = Very Popular
       } else if (activePopularity === "Popular") {
-        return popularity >= 70 && popularity < 85; // ← 70-84 = Popular
+        return popularity >= 70 && popularity < 85; // 70-84 = Popular
       } else if (activePopularity === "Less Popular") {
-        return popularity < 70; // ← Under 70 = Less Popular
+        return popularity < 70; // Under 70 = Less Popular
       }
       return true;
     });
   }
 
-  // Sortera på tid
+  // Sort by cooking time
   list.sort((a, b) => {
     return activeSort === "Ascending"
-      ? a.readyInMinutes - b.readyInMinutes
-      : b.readyInMinutes - a.readyInMinutes;
+      ? a.readyInMinutes - b.readyInMinutes // Fastest first
+      : b.readyInMinutes - a.readyInMinutes; // Slowest first
   });
 
-  // Visa recepten
+  // Show the filtered recipes on the page
   showRecipes(list);
 }
 
-// #### 4. Funktion för att koppla klick-händelser till knapparna
+// This function makes the filter buttons work when you click them
 function attachFilterListeners() {
   const allButtons = document.querySelectorAll(".filter-button");
 
@@ -403,6 +639,7 @@ function attachFilterListeners() {
       if (group) {
         const groupTitle = group.querySelector("h2").innerText;
 
+        // Figure out which type of filter button was clicked
         if (groupTitle.includes("kitchen")) {
           activeCuisine = button.innerText;
         } else if (groupTitle.includes("popularity")) {
@@ -411,24 +648,101 @@ function attachFilterListeners() {
           activeSort = button.innerText;
         }
 
-        // Ta bort active från alla knappar i samma grupp
+        // Remove the active highlight from all buttons in this group
         const groupButtons = group.querySelectorAll(".filter-button");
         groupButtons.forEach(b => b.classList.remove("filter-button--active"));
 
-        // Lägg till active på den klickade
+        // Add the active highlight to the button that was clicked
         button.classList.add("filter-button--active");
 
+        // Show the recipes that match the new filters
         filterAndSortRecipes();
-      } else {
-        // Om knappen INTE hör till en filtergrupp (random-knappen)
-        showRandomRecipe();
       }
+      // Note: Random and Favorites buttons have their own event listeners below
+      // So we don't need to handle them here anymore!
     });
   });
 }
 
-// #### 5. Koppla listeners (efter att filter är renderade)
+// Connect the buttons to their click actions
 attachFilterListeners();
 
-// #### 6. Visa startlistan
-filterAndSortRecipes();
+// Note: filterAndSortRecipes() is called AFTER fetchRecipes() completes
+// Don't call it here or it will replace the loader too early!
+
+// ===== SEARCH FUNCTIONALITY =====
+// Search recipes as you type!
+// Listen for when someone types in the search box
+searchInput.addEventListener('input', (event) => {
+  // Get what the user typed
+  searchText = event.target.value;
+  // Show only recipes that match what they typed
+  filterAndSortRecipes();
+});
+
+// ===== SIDEBAR FUNCTIONALITY =====
+// Elements for sidebar interaction
+const sidebarOverlay = document.getElementById('sidebar-overlay');
+const filterSidebar = document.getElementById('filter-sidebar');
+const btnFilterToggle = document.getElementById('btn-filter-toggle');
+const btnCloseSidebar = document.getElementById('btn-close-sidebar');
+
+// Function to open the sidebar
+const openSidebar = () => {
+  filterSidebar.classList.add('active');
+  sidebarOverlay.classList.add('active');
+  document.body.style.overflow = 'hidden'; // Prevent scrolling when sidebar is open
+};
+
+// Function to close the sidebar
+const closeSidebar = () => {
+  filterSidebar.classList.remove('active');
+  sidebarOverlay.classList.remove('active');
+  document.body.style.overflow = ''; // Re-enable scrolling
+};
+
+// Open sidebar when clicking "All Filters" button
+btnFilterToggle.addEventListener('click', openSidebar);
+
+// Close sidebar when clicking close button
+btnCloseSidebar.addEventListener('click', closeSidebar);
+
+// Close sidebar when clicking overlay (outside the sidebar)
+sidebarOverlay.addEventListener('click', closeSidebar);
+
+// ===== SIDEBAR FILTER LISTENERS =====
+// Handle clicks on cuisine filters in the sidebar
+const attachSidebarFilterListeners = () => {
+  const sidebarButtons = document.querySelectorAll('.sidebar-cuisine-btn');
+  
+  sidebarButtons.forEach(button => {
+    button.addEventListener('click', () => {
+      const cuisine = button.getAttribute('data-cuisine');
+      
+      // Update active cuisine filter
+      activeCuisine = cuisine;
+      
+      // Update active state on sidebar buttons
+      sidebarButtons.forEach(btn => btn.classList.remove('filter-button--active'));
+      button.classList.add('filter-button--active');
+      
+      // Update active state on main cuisine buttons
+      const mainCuisineButtons = document.querySelectorAll('#filter-cuisine .filter-button');
+      mainCuisineButtons.forEach(btn => {
+        btn.classList.remove('filter-button--active');
+        if (btn.innerText === cuisine) {
+          btn.classList.add('filter-button--active');
+        }
+      });
+      
+      // Apply filters and show recipes
+      filterAndSortRecipes();
+      
+      // Close sidebar after selecting a filter
+      closeSidebar();
+    });
+  });
+};
+
+// Attach sidebar filter listeners after rendering filters
+attachSidebarFilterListeners();
