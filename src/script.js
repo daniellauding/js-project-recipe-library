@@ -514,25 +514,37 @@ const renderFilters = () => {
 };
 
 // ===== RENDER SIDEBAR FILTERS =====
-// Populates the sidebar with all cuisine filter options
+// Populates the sidebar with ALL filter options (cuisine, popularity, sort)
 const renderSidebarFilters = () => {
-  const cuisineConfig = filterConfig.find(group => group.key === "cuisine");
-  const sidebarContainer = document.getElementById('sidebar-cuisine-filters');
+  const sidebarContainer = document.getElementById('sidebar-filters');
   
-  if (!cuisineConfig || !sidebarContainer) return;
+  if (!sidebarContainer) return;
   
-  // Build all cuisine buttons for sidebar
-  let buttonsHtml = "";
-  cuisineConfig.values.forEach((val, index) => {
-    const activeClass = index === 0 ? "filter-button--active" : "";
-    buttonsHtml += `
-      <button class="filter-button ${cuisineConfig.style} ${activeClass} sidebar-cuisine-btn" data-cuisine="${val}">
-        ${val}
-      </button>
+  // Build sections for each filter group
+  let sectionsHtml = "";
+  
+  filterConfig.forEach(group => {
+    let buttonsHtml = "";
+    group.values.forEach((val, index) => {
+      const activeClass = index === 0 ? "filter-button--active" : "";
+      buttonsHtml += `
+        <button class="filter-button ${group.style} ${activeClass} sidebar-filter-btn" 
+                data-filter-type="${group.key}" 
+                data-filter-value="${val}">
+          ${val}
+        </button>
+      `;
+    });
+    
+    sectionsHtml += `
+      <div class="filter-sidebar__section">
+        <h3 class="filter-sidebar__section-title">${group.title}</h3>
+        ${buttonsHtml}
+      </div>
     `;
   });
   
-  sidebarContainer.innerHTML = buttonsHtml;
+  sidebarContainer.innerHTML = sectionsHtml;
 };
 
 // Make all the icons appear on the page
@@ -711,26 +723,34 @@ btnCloseSidebar.addEventListener('click', closeSidebar);
 sidebarOverlay.addEventListener('click', closeSidebar);
 
 // ===== SIDEBAR FILTER LISTENERS =====
-// Handle clicks on cuisine filters in the sidebar
+// Handle clicks on ALL filters in the sidebar (cuisine, popularity, sort)
 const attachSidebarFilterListeners = () => {
-  const sidebarButtons = document.querySelectorAll('.sidebar-cuisine-btn');
+  const sidebarButtons = document.querySelectorAll('.sidebar-filter-btn');
   
   sidebarButtons.forEach(button => {
     button.addEventListener('click', () => {
-      const cuisine = button.getAttribute('data-cuisine');
+      const filterType = button.getAttribute('data-filter-type');
+      const filterValue = button.getAttribute('data-filter-value');
       
-      // Update active cuisine filter
-      activeCuisine = cuisine;
+      // Update the appropriate filter variable
+      if (filterType === 'cuisine') {
+        activeCuisine = filterValue;
+      } else if (filterType === 'popularity') {
+        activePopularity = filterValue;
+      } else if (filterType === 'sort') {
+        activeSort = filterValue;
+      }
       
-      // Update active state on sidebar buttons
-      sidebarButtons.forEach(btn => btn.classList.remove('filter-button--active'));
+      // Update active state on sidebar buttons in the same section
+      const sectionButtons = button.parentElement.querySelectorAll('.sidebar-filter-btn');
+      sectionButtons.forEach(btn => btn.classList.remove('filter-button--active'));
       button.classList.add('filter-button--active');
       
-      // Update active state on main cuisine buttons
-      const mainCuisineButtons = document.querySelectorAll('#filter-cuisine .filter-button');
-      mainCuisineButtons.forEach(btn => {
+      // Update active state on main filter buttons (if visible on desktop)
+      const mainButtons = document.querySelectorAll(`#filter-${filterType} .filter-button`);
+      mainButtons.forEach(btn => {
         btn.classList.remove('filter-button--active');
-        if (btn.innerText === cuisine) {
+        if (btn.innerText === filterValue) {
           btn.classList.add('filter-button--active');
         }
       });

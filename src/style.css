@@ -207,11 +207,13 @@ body {
 
 .filter-group {
   width: 100%;
+  display: none; /* Hidden on mobile by default */
 }
 
-@media (min-width: 600px) {
+@media (min-width: 768px) {
   .filter-group {
     width: auto;
+    display: block; /* Show on tablet and desktop */
   }
 }
 
@@ -575,14 +577,17 @@ body {
   top: 0;
   left: 0;
   width: 320px;
-  height: 100vh;
+  max-width: 85vw; /* Don't take up entire screen on small devices */
+  height: calc(100vh - 60px);
   background: white;
   box-shadow: 4px 0 16px rgba(0, 0, 0, 0.1);
   transform: translateX(-100%);
   transition: transform 0.3s ease;
   z-index: 999;
-  overflow-y: auto;
+  overflow-y: auto; /* Vertically scrollable */
   padding: var(--spacing-xl);
+  display: flex;
+  flex-direction: column;
 }
 
 /* Sidebar slides in when active */
@@ -640,7 +645,31 @@ body {
 .filter-sidebar__content {
   display: flex;
   flex-direction: column;
+  gap: var(--spacing-md);
+  overflow-y: auto; /* Allow scrolling if content is too long */
+  flex: 1; /* Take up remaining space */
+  padding-bottom: var(--spacing-md);
+}
+
+/* Filter sections in sidebar */
+.filter-sidebar__section {
+  display: flex;
+  flex-direction: column;
   gap: var(--spacing-sm);
+}
+
+.filter-sidebar__section-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin: 0 0 var(--spacing-xs) 0;
+  padding-top: var(--spacing-sm);
+  border-top: 1px solid var(--border-color-light);
+}
+
+.filter-sidebar__section:first-child .filter-sidebar__section-title {
+  border-top: none;
+  padding-top: 0;
 }
 
 /* Sidebar filter buttons - full width */
